@@ -52,4 +52,5 @@ export interface ErrorOverlayProps {
     line: number;
     column: number;
   };
+  onDismiss?: () => void;
 }

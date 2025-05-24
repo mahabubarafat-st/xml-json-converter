@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ConverterTabs from './components/ConverterTabs';
 import EditorPanel from './components/EditorPanel';
 import { ConversionMode, ViewMode } from './types';
@@ -13,7 +13,7 @@ function App() {
   );
   const [outputContent, setOutputContent] = useState<string>('');
   const [sourceViewMode, setSourceViewMode] = useState<ViewMode>(ViewMode.CODE);
-  const [outputViewMode, setOutputViewMode] = useState<ViewMode>(ViewMode.TREE);
+  const [outputViewMode, setOutputViewMode] = useState<ViewMode>(ViewMode.CODE);
   const [error, setError] = useState<string | null>(null);
 
   // Handle source content change
@@ -27,6 +27,8 @@ function App() {
     try {
       const result = convertContent(sourceContent, conversionMode);
       setOutputContent(result);
+      // Always set view mode to CODE after conversion
+      setOutputViewMode(ViewMode.CODE);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

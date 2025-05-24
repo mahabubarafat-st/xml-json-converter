@@ -340,7 +340,7 @@ const TreeView: React.FC<TreeViewProps> = ({ content, format, onEdit }) => {
   };
 
   return (
-    <div className="overflow-auto h-full p-2 bg-white">
+    <div className="overflow-auto h-full p-2 bg-white" style={{ maxHeight: 'calc(100vh - 12rem)', overflowY: 'auto' }}>
       {Object.keys(parsedData).map(key => (
         <TreeNode
           key={key}
@@ -354,6 +354,7 @@ const TreeView: React.FC<TreeViewProps> = ({ content, format, onEdit }) => {
           onEdit={onEdit}
         />
       ))}
+      <div className="py-4"></div>
       
       {contextMenu && contextMenu.visible && (
         <TreeContextMenu

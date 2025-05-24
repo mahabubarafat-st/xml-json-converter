@@ -179,7 +179,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
         />
       )}
 
-      <div className="flex-1 relative">
+      <div className="flex-1 relative overflow-hidden">
         {viewMode === ViewMode.CODE ? (
           <AceEditor
             ref={editorRef}
@@ -201,17 +201,20 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
               enableSnippets: true,
               showLineNumbers: true,
               tabSize: 2,
+              scrollPastEnd: true
             }}
           />
         ) : (
-          <TreeView
-            content={content}
-            format={format}
-            onEdit={readOnly ? undefined : onContentChange}
-          />
+          <div className="h-full overflow-auto">
+            <TreeView
+              content={content}
+              format={format}
+              onEdit={readOnly ? undefined : onContentChange}
+            />
+          </div>
         )}
 
-        {error && <ErrorOverlay message={error} />}
+        {error && <ErrorOverlay message={error} onDismiss={() => onContentChange(content)} />}
       </div>
     </div>
   );

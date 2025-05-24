@@ -1,10 +1,12 @@
+import { xml2js } from 'xml-js';
+
 /**
  * Parse content based on the specified format
  * @param content The content to parse
  * @param format The format ('json' or 'xml')
  * @returns The parsed data structure
  */
-export const parseContent = (content: string, format: 'json' | 'xml'): any => {
+export const parseContent = (content: string, format: 'json' | 'xml'): unknown => {
   if (!content.trim()) {
     return {};
   }
@@ -12,19 +14,25 @@ export const parseContent = (content: string, format: 'json' | 'xml'): any => {
   try {
     if (format === 'json') {
       // Parse JSON content
-      return JSON.parse(content);
+      const parsed = JSON.parse(content);
+      return parsed;
     } else {
-      // For XML, convert to JSON first (simplified implementation)
-      // In a real application, you would use xml-js properly here
-      // This is just a placeholder for demo purposes
+      // For XML, convert to JSON using xml-js
       try {
-        // Try to parse as JSON in case it's already been converted
-        return JSON.parse(content);
-      } catch {
-        // If it fails, return a dummy object
-        return {
-          "xml": "This is a placeholder for XML parsing in the TreeView"
-        };
+        const jsonObj = xml2js(content, {
+          compact: true,
+          alwaysChildren: false,
+          ignoreComment: true,
+          ignoreDeclaration: true,
+        });
+        return jsonObj;
+      } catch (xmlError) {
+        // If XML parsing fails, try parsing as JSON in case it's already been converted
+        try {
+          return JSON.parse(content);
+        } catch {
+          throw new Error(`Invalid XML format: ${xmlError instanceof Error ? xmlError.message : String(xmlError)}`);
+        }
       }
     }
   } catch (error) {
